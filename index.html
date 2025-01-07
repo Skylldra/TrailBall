@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Springender Ball</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #001f3f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    canvas {
+      border: 1px solid white;
+      background-color: #ffffff;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bouncingBall"></canvas>
+
+  <script>
+    const canvas = document.getElementById('bouncingBall');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = 500;
+    canvas.height = 500;
+
+    const circleRadius = canvas.width / 2 - 10;
+    const ballRadius = 10;
+    let ballX = canvas.width / 2;
+    let ballY = canvas.height / 2 - 100;
+    let velocityX = 2;
+    let velocityY = -3;
+    const trail = [];
+
+    function drawCircle() {
+      ctx.beginPath();
+      ctx.arc(canvas.width / 2, canvas.height / 2, circleRadius, 0, Math.PI * 2);
+      ctx.strokeStyle = '#001f3f';
+      ctx.lineWidth = 8;
+      ctx.stroke();
+      ctx.closePath();
+    }
+
+    function drawBall() {
+      ctx.beginPath();
+      ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+      ctx.fillStyle = '#ff4136';
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    function drawTrail() {
+      ctx.beginPath();
+      ctx.strokeStyle = '#0074d9';
+      ctx.lineWidth = 2;
+      ctx.moveTo(trail[0].x, trail[0].y);
+      for (let i = 1; i < trail.length; i++) {
+        ctx.lineTo(trail[i].x, trail[i].y);
+      }
+      ctx.stroke();
+      ctx.closePath();
+    }
+
+    function updatePosition() {
+      ballX += velocityX;
+      ballY += velocityY;
+
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+
+      const distanceToCenter = Math.sqrt(
+        (ballX - centerX) ** 2 + (ballY - centerY) ** 2
+      );
+
+      if (distanceToCenter + ballRadius >= circleRadius) {
+        const normalX = (ballX - centerX) / distanceToCenter;
+        const normalY = (ballY - centerY) / distanceToCenter;
+        const dotProduct = velocityX * normalX + velocityY * normalY;
+
+        velocityX -= 2 * dotProduct * normalX;
+        velocityY -= 2 * dotProduct * normalY;
+      }
+
+      trail.push({ x: ballX, y: ballY });
+      if (trail.length > 50) {
+        trail.shift();
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawCircle();
+      drawTrail();
+      drawBall();
+      updatePosition();
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
