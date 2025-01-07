@@ -31,13 +31,16 @@
     canvas.width = 500;
     canvas.height = 500;
 
-    const circleRadius = canvas.width / 2 - 10;
-    const ballRadius = 10;
+    const circleRadius = canvas.width / 2 - 20; // Ring-Größe reduziert
+    const ballRadius = 10; // Ball ist viel kleiner als der Kreis
     let ballX = canvas.width / 2;
-    let ballY = canvas.height / 2 - 100;
-    let velocityX = 2;
-    let velocityY = -3;
-    const trail = [];
+    let ballY = canvas.height / 2;
+
+    // Zufällige Startgeschwindigkeit
+    let velocityX = (Math.random() * 4 - 2) || 1; // Geschwindigkeit zwischen -2 und 2
+    let velocityY = (Math.random() * 4 - 2) || 1;
+
+    const trail = []; // Spur des Balls
 
     function drawCircle() {
       ctx.beginPath();
@@ -79,6 +82,7 @@
         (ballX - centerX) ** 2 + (ballY - centerY) ** 2
       );
 
+      // Wenn der Ball den Ringrand berührt, prallt er ab
       if (distanceToCenter + ballRadius >= circleRadius) {
         const normalX = (ballX - centerX) / distanceToCenter;
         const normalY = (ballY - centerY) / distanceToCenter;
@@ -90,7 +94,7 @@
 
       trail.push({ x: ballX, y: ballY });
       if (trail.length > 50) {
-        trail.shift();
+        trail.shift(); // Spur begrenzen
       }
     }
 
