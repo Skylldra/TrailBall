@@ -38,9 +38,9 @@
     let ballX = canvas.width / 2;
     let ballY = canvas.height / 2;
 
-    // Initial velocities
-    let velocityX = (Math.random() * 4 - 2) || 1; // Random horizontal velocity
-    let velocityY = (Math.random() * 4 - 2) || 1; // Random vertical velocity
+    // Initial velocities (ensure enough vertical velocity to reach the top)
+    let velocityX = (Math.random() * 4 - 2) || 2; // Random horizontal velocity
+    let velocityY = -(Math.random() * 5 + 5); // Strong upward velocity
 
     const gravity = 0.2; // Gravity factor
     const bounceFactor = 1; // Maintain full energy
