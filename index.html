@@ -28,19 +28,21 @@
     const canvas = document.getElementById('bouncingBall');
     const ctx = canvas.getContext('2d');
 
+    // Set canvas size
     canvas.width = 500;
     canvas.height = 500;
 
-    const circleRadius = canvas.width / 2 - 20; // Ring-Größe reduziert
-    const ballRadius = 10; // Ball ist viel kleiner als der Kreis
+    // Circle and ball properties
+    const circleRadius = canvas.width / 2 - 30; // Reduced circle radius to leave space for the ball
+    const ballRadius = 15; // Ball is smaller than the circle
     let ballX = canvas.width / 2;
     let ballY = canvas.height / 2;
 
-    // Zufällige Startgeschwindigkeit
-    let velocityX = (Math.random() * 4 - 2) || 1; // Geschwindigkeit zwischen -2 und 2
+    // Random initial velocity for the ball
+    let velocityX = (Math.random() * 4 - 2) || 1; // Random velocity between -2 and 2
     let velocityY = (Math.random() * 4 - 2) || 1;
 
-    const trail = []; // Spur des Balls
+    const trail = []; // Trail of the ball
 
     function drawCircle() {
       ctx.beginPath();
@@ -63,7 +65,7 @@
       ctx.beginPath();
       ctx.strokeStyle = '#0074d9';
       ctx.lineWidth = 2;
-      ctx.moveTo(trail[0].x, trail[0].y);
+      ctx.moveTo(trail[0]?.x || ballX, trail[0]?.y || ballY);
       for (let i = 1; i < trail.length; i++) {
         ctx.lineTo(trail[i].x, trail[i].y);
       }
@@ -78,11 +80,11 @@
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
 
+      // Check collision with the circle boundary
       const distanceToCenter = Math.sqrt(
         (ballX - centerX) ** 2 + (ballY - centerY) ** 2
       );
 
-      // Wenn der Ball den Ringrand berührt, prallt er ab
       if (distanceToCenter + ballRadius >= circleRadius) {
         const normalX = (ballX - centerX) / distanceToCenter;
         const normalY = (ballY - centerY) / distanceToCenter;
@@ -92,9 +94,10 @@
         velocityY -= 2 * dotProduct * normalY;
       }
 
+      // Update trail
       trail.push({ x: ballX, y: ballY });
-      if (trail.length > 50) {
-        trail.shift(); // Spur begrenzen
+      if (trail.length > 100) {
+        trail.shift(); // Limit the trail length
       }
     }
 
