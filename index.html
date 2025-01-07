@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Springender Ball</title>
+  <title>Springender Ball mit Gravity</title>
   <style>
     body {
       margin: 0;
@@ -33,15 +33,16 @@
     canvas.height = 500;
 
     // Circle and ball properties
-    const circleRadius = canvas.width / 2 - 30; // Reduced circle radius to leave space for the ball
-    const ballRadius = 15; // Ball is smaller than the circle
+    const circleRadius = canvas.width / 2 - 30; // Circle size
+    const ballRadius = 15; // Ball size
     let ballX = canvas.width / 2;
     let ballY = canvas.height / 2;
 
-    // Random initial velocity for the ball
-    let velocityX = (Math.random() * 4 - 2) || 1; // Random velocity between -2 and 2
-    let velocityY = (Math.random() * 4 - 2) || 1;
+    // Initial velocities
+    let velocityX = (Math.random() * 4 - 2) || 1; // Horizontal velocity
+    let velocityY = (Math.random() * 4 - 2) || 1; // Vertical velocity
 
+    const gravity = 0.1; // Gravity factor
     const trail = []; // Trail of the ball
 
     function drawCircle() {
@@ -74,6 +75,9 @@
     }
 
     function updatePosition() {
+      // Apply gravity
+      velocityY += gravity;
+
       ballX += velocityX;
       ballY += velocityY;
 
@@ -86,12 +90,19 @@
       );
 
       if (distanceToCenter + ballRadius >= circleRadius) {
+        // Calculate collision normal
         const normalX = (ballX - centerX) / distanceToCenter;
         const normalY = (ballY - centerY) / distanceToCenter;
+
+        // Reflect the velocity vector
         const dotProduct = velocityX * normalX + velocityY * normalY;
 
         velocityX -= 2 * dotProduct * normalX;
         velocityY -= 2 * dotProduct * normalY;
+
+        // Simulate energy loss by reducing velocity slightly
+        velocityX *= 0.9;
+        velocityY *= 0.9;
       }
 
       // Update trail
