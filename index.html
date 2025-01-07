@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Springender Ball mit Gravity</title>
+  <title>Springender Ball mit konstanter Energie</title>
   <style>
     body {
       margin: 0;
@@ -39,10 +39,11 @@
     let ballY = canvas.height / 2;
 
     // Initial velocities
-    let velocityX = (Math.random() * 4 - 2) || 1; // Horizontal velocity
-    let velocityY = (Math.random() * 4 - 2) || 1; // Vertical velocity
+    let velocityX = (Math.random() * 4 - 2) || 1; // Random horizontal velocity
+    let velocityY = (Math.random() * 4 - 2) || 1; // Random vertical velocity
 
-    const gravity = 0.1; // Gravity factor
+    const gravity = 0.2; // Gravity factor
+    const bounceFactor = 1; // Keep energy consistent (no energy loss)
     const trail = []; // Trail of the ball
 
     function drawCircle() {
@@ -100,9 +101,9 @@
         velocityX -= 2 * dotProduct * normalX;
         velocityY -= 2 * dotProduct * normalY;
 
-        // Simulate energy loss by reducing velocity slightly
-        velocityX *= 0.9;
-        velocityY *= 0.9;
+        // Maintain energy (no energy loss)
+        velocityX *= bounceFactor;
+        velocityY *= bounceFactor;
       }
 
       // Update trail
