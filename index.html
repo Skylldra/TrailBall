@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Springender Ball mit konstanter Energie</title>
+  <title>Springender Ball</title>
   <style>
     body {
       margin: 0;
@@ -43,7 +43,8 @@
     let velocityY = (Math.random() * 4 - 2) || 1; // Random vertical velocity
 
     const gravity = 0.2; // Gravity factor
-    const bounceFactor = 1; // Keep energy consistent (no energy loss)
+    const bounceFactor = 1; // Maintain full energy
+    const epsilon = 0.01; // Small value to prevent "sinking" through the barrier
     const trail = []; // Trail of the ball
 
     function drawCircle() {
@@ -101,9 +102,14 @@
         velocityX -= 2 * dotProduct * normalX;
         velocityY -= 2 * dotProduct * normalY;
 
-        // Maintain energy (no energy loss)
+        // Maintain full energy
         velocityX *= bounceFactor;
         velocityY *= bounceFactor;
+
+        // Prevent the ball from "sinking" into the wall
+        const overlap = distanceToCenter + ballRadius - circleRadius + epsilon;
+        ballX -= normalX * overlap;
+        ballY -= normalY * overlap;
       }
 
       // Update trail
